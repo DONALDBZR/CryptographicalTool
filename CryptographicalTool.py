@@ -344,7 +344,7 @@ class CryptographicalTool:
                     plainTextMatrix[secondIndex][firstIndex] = cipherText[index]
                     index += 1
                 for secondIndex in range(firstIndex, matrixWidth - firstIndex - 1, 1):
-                    plainTextMatrix[firstIndex][secondIndex] = cipherText[index]
+                    plainTextMatrix[firstIndex][secondIndex] = cipherText[index - 1]
                     index += 1
             # For-Loop for reconstructing the plain text
             for firstIndex in range(0, matrixHeight, 1):
