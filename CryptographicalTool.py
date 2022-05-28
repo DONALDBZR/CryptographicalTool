@@ -4,8 +4,6 @@ import sys
 from click import command
 # Importing Numerical Python
 import numpy
-# Importing Euclidean
-import Euclidean
 # Importing Mathematics
 import math
 # Cryptographical Tool class
@@ -291,7 +289,7 @@ class CryptographicalTool:
             # Local variables
             index = 0
             matrixRepresentation = []
-            cipherText: str
+            cipherText = ""
             stepSize = int(input("Enter the step's size: "))
             # For-loop for creating a matrix from the plain text with the step's size as width
             for firstIndex in range(0, self.Mathematics.ceil(len(plainText) / stepSize), 1):
