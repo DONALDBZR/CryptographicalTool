@@ -276,7 +276,7 @@ class CryptographicalTool:
         self.menu()
     # Route Cipher method
     def routeCipher(self):
-        self.setText(str(input("Enter the text to encrypt/decrypt: ")))
+        self.setText(str(input("Enter the text to encrypt/decrypt: ").replace(" ", "").upper()))
         print("========================================")
         print("Press 0 to cancel cipher")
         print("Press 1 to encrypt")
@@ -287,70 +287,46 @@ class CryptographicalTool:
         # Encrypt function
         def encrypt(plainText: str):
             # Local variables
-            index = 0
-            matrixRepresentation = []
+            key = int(input("Enter the key: "))
+            matrix = []
+            matrixRow = []
+            height = self.Mathematics.ceil(len(plainText) / key)
+            width = key
             cipherText = ""
-            stepSize = int(input("Enter the step's size: "))
-            # For-loop for creating a matrix from the plain text with the step's size as width
-            for firstIndex in range(0, self.Mathematics.ceil(len(plainText) / stepSize), 1):
-                matrixRow = []
-                for secondIndex in range(0, stepSize, 1):
-                    if firstIndex * stepSize + secondIndex < len(plainText):
-                        matrixRow.append(plainText[firstIndex * stepSize + secondIndex])
+            # For-loop to fill the matrix
+            for firstIndex in range(0, height, 1):
+                # For-loop to fill the row of the matrix
+                for secondIndex in range(0, key, 1):
+                    characterCount = (firstIndex * key) + secondIndex + 1
+                    # If-statement to determine whether the indices have not reached the length of the plain text
+                    if characterCount < len(plainText):
+                        matrixRow.append(plainText[secondIndex])
                     else:
-                        matrixRow.append("-")
-                matrixRepresentation.append(matrixRow)
-            matrixWidth = len(matrixRepresentation[0])
-            matrixHeight = len(matrixRepresentation)
-            # If-statement to verify that the matrix's width is less than the matrix's height
-            if matrixWidth < matrixHeight:
-                allowedDepth = matrixWidth // 2
+                        matrixRow.append(".")
+                matrix.append(matrixRow)
+            # If-statement to calculate the depth of the encryption
+            if width < height:
+                depth = width // 2
             else:
-                allowedDepth = matrixHeight // 2
-            # For-loop to encrypt the plain text by going in a spiral form by starting in the top-right corner
-            for firstIndex in range(0, allowedDepth, 1):
-                for secondIndex in range(firstIndex, matrixHeight - firstIndex - 1, 1):
-                    cipherText += matrixRepresentation[secondIndex][matrixWidth - firstIndex - 1]
-                for secondIndex in range(matrixWidth - firstIndex - 1, firstIndex, -1):
-                    cipherText += matrixRepresentation[matrixHeight - firstIndex - 1][secondIndex]
-                for secondIndex in range(matrixHeight - firstIndex - 1, firstIndex, -1):
-                    cipherText += matrixRepresentation[secondIndex][firstIndex]
-                for secondIndex in range(firstIndex, matrixWidth - firstIndex - 1, 1):
-                    cipherText += matrixRepresentation[firstIndex][secondIndex]
+                depth = height // 2
+            # For-loop to encrypt the data
+            for firstIndex in range(0, depth, 1):
+                # For-loop to go down
+                for secondIndex in range(firstIndex, height - firstIndex - 1, 1):
+                    cipherText += matrix[secondIndex][width - firstIndex - 1]
+                # For-loop to go left
+                for secondIndex in range(width - firstIndex - 1, firstIndex, -1):
+                    cipherText += matrix[height - firstIndex - 1][secondIndex]
+                # For-loop to go up
+                for secondIndex in range(height - firstIndex - 1, firstIndex, -1):
+                    cipherText += matrix[secondIndex][firstIndex]
+                # For-loop to go right
+                for secondIndex in range(firstIndex, width - firstIndex - 1, 1):
+                    cipherText += matrix[firstIndex][secondIndex]
             return cipherText
         # Decrypt function
         def decrypt(cipherText: str):
-            # Local variables
-            stepSize = int(input("Enter the step's size: "))
-            index = 0
-            plainText: str
-            matrixWidth = stepSize
-            matrixHeight = self.Mathematics.ceil(len(cipherText) / stepSize)
-            plainTextMatrix = [[0 for firstIndex in range(0, matrixWidth, 1)] for secondIndex in range(0, matrixHeight, 1)]
-            # If-statement to verify that the matrix's width is less than the matrix's height
-            if matrixWidth < matrixHeight:
-                allowedDepth = matrixWidth // 2
-            else:
-                allowedDepth = matrixHeight // 2
-            # For-loop to decrypt the cipher text
-            for firstIndex in range(0, allowedDepth, 1):
-                for secondIndex in range(firstIndex, matrixHeight - firstIndex - 1, 1):
-                    plainTextMatrix[secondIndex][matrixWidth - firstIndex - 1] = cipherText[index]
-                    index += 1
-                for secondIndex in range(matrixWidth - firstIndex - 1, firstIndex, -1):
-                    plainTextMatrix[matrixHeight - firstIndex - 1][secondIndex] = cipherText[index]
-                    index += 1
-                for secondIndex in range(matrixHeight - firstIndex - 1, firstIndex, -1):
-                    plainTextMatrix[secondIndex][firstIndex] = cipherText[index]
-                    index += 1
-                for secondIndex in range(firstIndex, matrixWidth - firstIndex - 1, 1):
-                    plainTextMatrix[firstIndex][secondIndex] = cipherText[index - 1]
-                    index += 1
-            # For-Loop for reconstructing the plain text
-            for firstIndex in range(0, matrixHeight, 1):
-                for secondIndex in range(0, matrixWidth, 1):
-                    plainText += plainText[firstIndex][secondIndex]
-            return plainText
+            pass
         # If-statement to verify whether to encrypt or decrypt the data entered
         if choice == 0:
             self.menu()
