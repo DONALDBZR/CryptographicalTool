@@ -276,6 +276,7 @@ class CryptographicalTool:
         self.menu()
     # Route Cipher method
     def routeCipher(self):
+        print("========================================")
         self.setText(str(input("Enter the text to encrypt/decrypt: ")))
         print("========================================")
         print("Press 0 to cancel cipher")
