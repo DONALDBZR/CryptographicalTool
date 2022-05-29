@@ -276,7 +276,7 @@ class CryptographicalTool:
         self.menu()
     # Route Cipher method
     def routeCipher(self):
-        self.setText(str(input("Enter the text to encrypt/decrypt: ").replace(" ", "").upper()))
+        self.setText(str(input("Enter the text to encrypt/decrypt: ")))
         print("========================================")
         print("Press 0 to cancel cipher")
         print("Press 1 to encrypt")
@@ -289,21 +289,22 @@ class CryptographicalTool:
             # Local variables
             key = int(input("Enter the key: "))
             matrix = []
-            matrixRow = []
-            height = self.Mathematics.ceil(len(plainText) / key)
-            width = key
             cipherText = ""
             # For-loop to fill the matrix
-            for firstIndex in range(0, height, 1):
+            for firstIndex in range(0, self.Mathematics.ceil(len(plainText) / key), 1):
+                # Local variables
+                matrixRow = []
                 # For-loop to fill the row of the matrix
                 for secondIndex in range(0, key, 1):
-                    characterCount = (firstIndex * key) + secondIndex + 1
                     # If-statement to determine whether the indices have not reached the length of the plain text
-                    if characterCount < len(plainText):
-                        matrixRow.append(plainText[secondIndex])
+                    if firstIndex * key + secondIndex < len(plainText):
+                        matrixRow.append(plainText[firstIndex * key + secondIndex])
                     else:
                         matrixRow.append(".")
                 matrix.append(matrixRow)
+            # Calculating the dimensions of the matrix
+            width = len(matrix[0])
+            height = len(matrix)
             # If-statement to calculate the depth of the encryption
             if width < height:
                 depth = width // 2
@@ -326,7 +327,43 @@ class CryptographicalTool:
             return cipherText
         # Decrypt function
         def decrypt(cipherText: str):
-            pass
+            # Local variables
+            key = int(input("Enter the key: "))
+            count = 0
+            plainText = ""
+            width = key
+            height = self.Mathematics.ceil(len(cipherText) / key)
+            # If-statement to calculate the depth
+            if width < height:
+                depth = width // 2
+            else:
+                depth = height // 2
+            # Creating a two-dimensional array which has the size needed for the decryption
+            matrix = [[0 for firstIndex in range(0, width, 1)] for secondIndex in range(0, height, 1)]
+            # For-loop to decrypt the cipher text
+            for firstIndex in range(0, depth, 1):
+                # For-loop to go down
+                for secondIndex in range(firstIndex, height - firstIndex - 1, 1):
+                    matrix[secondIndex][width - firstIndex - 1] = cipherText[count]
+                    count += 1
+                # For-loop to go left
+                for secondIndex in range(width - firstIndex - 1, firstIndex, -1):
+                    matrix[height - firstIndex - 1][secondIndex] = cipherText[count]
+                    count += 1
+                # For-loop to go up
+                for secondIndex in range(height - firstIndex - 1, firstIndex, -1):
+                    matrix[secondIndex][firstIndex] = cipherText[count]
+                    count += 1
+                # For-loop to go right
+                for secondIndex in range(firstIndex, width - firstIndex - 1, 1):
+                    matrix[firstIndex][secondIndex] = cipherText[count]
+                    count += 1
+            # For-loop to restruct the plain text
+            for firstIndex in range(0, height, 1):
+                # For-loop to read row by row
+                for secondIndex in range(0, width, 1):
+                    plainText += matrix[firstIndex][secondIndex]
+            return plainText
         # If-statement to verify whether to encrypt or decrypt the data entered
         if choice == 0:
             self.menu()
